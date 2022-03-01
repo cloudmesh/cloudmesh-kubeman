@@ -16,110 +16,38 @@ class KubemanCommand(PluginCommand):
         """
         ::
             Usage:
-              gregor-deploy.py --info
-              gregor-deploy.py --kill [--keep_history]
-              gregor-deploy.py --token [--keep_history]
-              gregor-deploy.py --about
+              cms kubeman --info
+              cms kubeman --kill [--keep_history]
+              cms kubeman --token [--keep_history]
+              cms kubeman --about
 
-
-            Deploys the indycar runtime environment on an ubuntu 20.04 system.
-
-            Arguments:
-              FILE        optional input file
-              CORRECTION  correction angle, needs FILE, --left or --right to be present
+            Simple management commands for kubernetes for ubuntu 20.04 system.
 
             Options:
               -h --help
-              --info       info command
-              --run        run the default deploy workflow (till the bug)
-              --step       run the default deploy workflow step by step
+              --keep_history  do not delete the history between different commands
+              --token         prints the security token
+              --kill          killing the kubernetes environment whne set up wit minikube
+              --info          info command
+              --run           run the default deploy workflow (till the bug)
 
             Description:
 
-              gregor-deploy.py --info
+              cms kubeman --info
                 gets information about the running services
 
-              gregor-deploy.py --kill
+              cms kubeman --kill
                 kills all services
 
-              gregor-deploy.py --run [--dashboard] [--stormui]
+              cms kubeman --run [--dashboard] [--stormui]
                 runs the workflow without interruption till the error occurs
                 If --dashboard and --storm are not specified neither GUI is started.
                 This helps on systems with commandline options only.
 
-              gregor-deploy.py --step [--dashboard] [--stormui]
+              cms kubeman --step [--dashboard] [--stormui]
                 runs the workflow while asking in each mayor step if one wants to continue.
                 This helps to check for log files at a particular place in the workflow.
                 If the workflow is not continued it is interrupted.
-
-              gregor-deploy.py --dashboard
-                starts the kubernetes dashboard. Minikube must have been setup before
-
-              gregor-deploy.py --stormui
-                starts the storm gui. All of storm must be set up before.
-
-              Examples:
-                gregor-deploy.py --run --dashboard --stormui
-                    runs the workflow without interruptions including the k8 and storm dashboards
-
-                gregor-deploy.py --step --dashboard --stormui
-                    runs the workflow with continuation questions including the k8 and storm dashboards
-
-                gregor-deploy.py --menu
-                    allows the selction of a particular step in the workflow
-
-                less $INDYCAR/history.txt
-
-              Possible Bugs:
-              1. broken/unused storm-worker-service: The storm-worker-service is mentioned in the storm/setup.sh script.
-                 However it is not mentioned in the
-                 presentation slide that describes the setup. Furthermore when one starts this service, it does not
-                 work and the probe seems to fail. For the reason that it is not mentioned in the guide and does nt work
-                 we have not enabled it.
-              2. kubectl race condition: A race condition in kubectl was avoided, buy adding an additional second wait time
-                 after calling commands.
-                 If errors still occur, the wait time is suggested to be increased. Currently, the wait time is set to 1 second.
-              3. htm.java: Installation error of htm.java: This uses an outdated htm.java library. It is uncertain if this
-                 causes an issue
-
-              Benchmark:
-                AMD5950
-                +----------------------+----------+---------+
-                | Name                 | Status   |    Time |
-                |----------------------+----------+---------|
-                | kill                 | ok       |  17.134 |
-                | download_data        | ok       |   0     |
-                | setup_minikube       | ok       |  20.844 |
-                | setup_k8             | ok       |  12.507 |
-                | setup_zookeeper      | ok       |   7.405 |
-                | setup_nimbus         | ok       |   8.462 |
-                | setup_storm_ui       | ok       |   4.312 |
-                | open_stopm_ui        | ok       | 173.242 |
-                | start_storm_workers  | ok       |   3.213 |
-                | install_htm_java     | ok       |  52.482 |
-                | setup_mqtt           | ok       |  11.591 |
-                | start_storm_topology | ok       |  29.605 |
-                +----------------------+----------+---------+
-
-                EPY    via vnc
-                +----------------------+----------+---------+
-                | Name                 | Status   |    Time |
-                |----------------------+----------+---------|
-                | kill                 | ok       |  19.352 |
-                | download_data        | ok       |   0     |
-                | setup_minikube       | ok       |  31.828 |
-                | setup_k8             | ok       |  12.775 |
-                | setup_zookeeper      | ok       |  60.753 |
-                | setup_nimbus         | ok       |  93.771 |
-                | setup_storm_ui       | ok       |   4.366 |
-                | open_stopm_ui        | ok       | 270.364 |
-                | start_storm_workers  | ok       |   3.213 |
-                | install_htm_java     | ok       | 183.767 |
-                | setup_mqtt           | ok       | 122.997 |
-                | start_storm_topology | ok       |  52.876 |
-                | minikube_setup_sh    | ok       |  37.129 |
-                | start_socket_server  | ok       | 113.281 |
-                +----------------------+----------+---------+
 
               Credits:
                 This script is authored by Gregor von Laszewski, any work conducted with it must cite the following:
