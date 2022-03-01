@@ -67,7 +67,7 @@ class KubemanCommand(PluginCommand):
                 Text entry for citation in other then LaTeX documents:
                     Gregor von Laszewski, Cloudmesh Kubemanager, published on GitHub, URL:TBD, Feb. 2022.
         """
-        VERBOSE(arguments)
+        # VERBOSE(arguments)
 
         signal(SIGINT, Kubeman.exit_handler)
         global step
